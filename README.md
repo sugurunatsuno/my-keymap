@@ -1,0 +1,62 @@
+# Keyboard Layout Lab
+
+自分の手に合う日本語ローマ字入力向けキーボード配列を、実測と探索で研究するためのリポジトリです。
+
+## 研究の出発点
+
+- Colemak の運指は好感触だった。
+- Eucalyn は指の動きと、中央付近の記号配置に違和感があった。
+- 初期の対象は日本語ローマ字入力。将来的に AZIK に似た省略規則も評価する。
+- 速さだけでなく、同指連続打鍵、指先の移動、エラー、習得コストを区別して測る。
+- 計測から結論を出す前に、撮影条件・サンプル・誤差を保存する。
+
+現在の実装は **カメラで両手の21点のランドマークを時刻付きで取得し、指先の移動量を集計する試作** です。押されたキー、打鍵速度、疲労度、配列の良し悪しを映像から自動判定するものではありません。
+
+## 最初に動かす
+
+Python 3.10 以降を推奨。カメラが使える PC で実行します。
+
+```bash
+python -m venv .venv
+# macOS/Linux:
+source .venv/bin/activate
+# Windows PowerShell:
+# .venv\Scripts\Activate.ps1
+python -m pip install -e '.[camera]'
+python -m keylab download-model
+python -m keylab capture --duration 60 --layout colemak --task-id trial-01
+python -m keylab analyze --latest
+```
+
+- `capture` の終了は `q`（プレビュー時）か Ctrl+C。 `--duration` 秒で自動終了。
+- `--camera 1` で別のカメラを選択可能。 `--layout` / `--task-id` を指定すると比較時に区別できます。
+- 映像そのものを保存したい場合だけ `--save-video` を追加。
+- `landmarks.csv.gz` は時刻と21点の座標です。 `summary.csv` は指先ごとの移動量の集計です。
+- `--preview` は画面を表示しますが、 `--save-video` を付けない限り動画は保存しません。
+
+モデルは Google MediaPipe の Hand Landmarker を明示的な操作でダウンロードします。初回起動時に隠れてネットワークへ接続することはありません。
+
+公式ドキュメント: https://developers.google.com/edge/mediapipe/solutions/vision/hand_landmarker
+
+## 研究の進め方
+
+最初は同じキーボード/カメラ位置/課題文で QWERTY、Colemak、Eucalyn を比較する設計を考えます。配列を実際に覚え直す効果は大きいので、習熟度が違う状態での単純比較は避けます。最初は自分の自然な入力時の手の動きを記録し、計測パイプラインを検証します。
+
+測定指標は `docs/experiment.md`、カメラ映像の取り扱いは `docs/privacy.md` を参照。
+
+## 使えるコマンド
+
+```bash
+python -m keylab --help
+python -m keylab download-model --output models/hand_landmarker.task
+python -m keylab capture --camera 0 --duration 120 --layout qwerty --task-id baseline-01
+python -m keylab analyze --latest
+python -m pytest -q
+```
+
+## 制約
+
+- 動きの単位は画面上のピクセルです。カメラ位置や解像度が違う測定をそのまま比較しません。
+- 追跡の途切れ、手の重なり、左右判定の変化は誤差になります。
+- カメラだけではキー押下・配列ごとの正確な打鍵数・疲労は測れません。
+- 生動画・キー入力の内容を GitHub にアップロードしないでください。 `.gitignore` に計測データとモデルを登録しています。
