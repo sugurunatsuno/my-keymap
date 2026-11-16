@@ -31,7 +31,7 @@ python -m keylab analyze --latest
 - `capture` の終了は `q`（プレビュー時）か Ctrl+C。 `--duration` 秒で自動終了。
 - `--camera 1` で別のカメラを選択可能。 `--layout` / `--task-id` を指定すると比較時に区別できます。
 - 映像そのものを保存したい場合だけ `--save-video` を追加。
-- `landmarks.csv.gz` は時刻と21点の座標です。 `summary.csv` は指先ごとの移動量の集計です。
+- `landmarks.csv.gz` は時刻と21点の座標です。 `summary.csv` は指先と手首の移動量、手首に対する指先の相対移動量の集計です。
 - `--preview` は画面を表示しますが、 `--save-video` を付けない限り動画は保存しません。
 
 モデルは Google MediaPipe の Hand Landmarker を明示的な操作でダウンロードします。初回起動時に隠れてネットワークへ接続することはありません。
