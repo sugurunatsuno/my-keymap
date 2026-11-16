@@ -50,3 +50,31 @@ def test_end_to_end_report(tmp_path: Path):
 def test_invalid_metadata():
     with pytest.raises(ValueError):
         analyze_rows([], 0, 100, 3)
+
+def test_wrist_and_finger_translation():
+    data = [
+        row(0, 0, 0.1, lid=0), row(0, 0, 0.2, lid=8),
+        row(0.1, 1, 0.2, lid=0), row(0.1, 1, 0.3, lid=8),
+    ]
+    by_finger = {x["finger"]: x for x in analyze_rows(data, 100, 100, 2)}
+    assert by_finger["wrist"]["total_path_px"] == 10
+    assert by_finger["index"]["total_path_px"] == 10
+    assert by_finger["index"]["wrist_relative_path_px"] == 0
+    assert by_finger["index"]["wrist_relative_segments"] == 1
+
+
+def test_stationary_wrist_moving_finger():
+    data = [
+        row(0, 0, 0.1, lid=0), row(0, 0, 0.2, lid=8),
+        row(0.1, 1, 0.1, lid=0), row(0.1, 1, 0.3, lid=8),
+    ]
+    by_finger = {x["finger"]: x for x in analyze_rows(data, 100, 100, 2)}
+    assert by_finger["wrist"]["total_path_px"] == 0
+    assert by_finger["index"]["wrist_relative_path_px"] == 10
+
+
+def test_no_wrist_is_missing_not_zero():
+    r = analyze_rows([row(0, 0, 0.1), row(0.1, 1, 0.2)], 100, 100, 2)[0]
+    assert r["wrist_relative_path_px"] is None
+    assert r["wrist_relative_segments"] == 0
+
