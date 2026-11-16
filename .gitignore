@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+.dist/
+build/
+dist/
+models/*.task
+data/sessions/
+data/private/
+*.mp4
+*.avi
+.DS_Store
