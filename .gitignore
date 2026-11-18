@@ -17,3 +17,7 @@ data/private/
 reports/
 corpus.txt
 corpus_*.txt
+
+# Personal exported IME tables and generated variants
+ime/local/
+romantable-backup*.txt
