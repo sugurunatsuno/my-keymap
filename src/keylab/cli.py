@@ -38,6 +38,8 @@ def build_parser():
     heatmap.add_argument("--out-dir", type=Path, default=Path("reports/heatmap"))
     heatmap.add_argument("--mode", choices=("auto", "kana", "romaji"), default="auto")
     heatmap.add_argument("--n-style", choices=("double", "contextual"), default="double")
+    heatmap.add_argument("--small-kana-style", choices=("l", "x"), default="l",
+                         help="Prefix for isolated small kana (default: l)")
     return parser
 
 
@@ -83,7 +85,7 @@ def main(argv=None):
         elif args.command == "heatmap":
             from .heatmap import generate_heatmap
             summary = generate_heatmap(args.input_file, args.layout, args.out_dir,
-                                       args.mode, args.n_style)
+                                       args.mode, args.n_style, args.small_kana_style)
             print(f"Estimated keypresses: {summary['estimated_keypresses']:,}")
             print(f"HTML: {args.out_dir / 'heatmap.html'}")
             print(f"CSV: {args.out_dir / 'key_counts.csv'}")
