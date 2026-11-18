@@ -22,6 +22,10 @@
 
 オリジナルの設計基準は保持したまま、Uをホーム段、Eを上段へ交換する[候補配列](layouts/personal-colemak-derived-65-ue-swap-v2.json)を追加しました。小書きかな入力のL方式もヒートマップで選択できます。比較方法は [docs/heatmap.md](docs/heatmap.md) を参照。
 
+## EffiveRoman語尾拡張の単語帳
+
+EffiveRomanの語尾拡張35件を[単語帳TSV](lexicons/effiveroman-suffixes.tsv)と[解説](docs/effiveroman-suffixes.md)に保存しました。最初の試用候補は8件ですが、現時点では実験前です。TSVは候補管理用であり、Google日本語入力へ直接インポートするものではありません。
+
 ## スニペットレイヤーの設計
 
 通常のローマ字入力を残しながら、頻出するかな2文字/3文字を追加レイヤーで短縮入力する研究を進めます。U/E交換案と小書きかなのL入力を前提にした、[検討ノート](docs/snippet-layer.md)を作成しました。まだ実機向けのキーマップやマクロは実装していません。
