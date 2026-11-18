@@ -32,6 +32,12 @@ def build_parser():
     report = sub.add_parser("analyze", help="Summarize movements from a recorded session")
     report.add_argument("session_dir", type=Path, nargs="?")
     report.add_argument("--latest", action="store_true", help="Analyze newest data/sessions directory")
+    heatmap = sub.add_parser("heatmap", help="Create a local Japanese romaji key-frequency heatmap")
+    heatmap.add_argument("input_file", type=Path, help="UTF-8 input text")
+    heatmap.add_argument("--layout", type=Path, default=Path("layouts/personal-colemak-derived-65.json"))
+    heatmap.add_argument("--out-dir", type=Path, default=Path("reports/heatmap"))
+    heatmap.add_argument("--mode", choices=("auto", "kana", "romaji"), default="auto")
+    heatmap.add_argument("--n-style", choices=("double", "contextual"), default="double")
     return parser
 
 
@@ -74,6 +80,14 @@ def main(argv=None):
             report = analyze_session(session_dir)
             print(f"Analyzed {len(report['summary'])} fingertip tracks")
             print(f"Wrote {session_dir / 'summary.csv'}")
+        elif args.command == "heatmap":
+            from .heatmap import generate_heatmap
+            summary = generate_heatmap(args.input_file, args.layout, args.out_dir,
+                                       args.mode, args.n_style)
+            print(f"Estimated keypresses: {summary['estimated_keypresses']:,}")
+            print(f"HTML: {args.out_dir / 'heatmap.html'}")
+            print(f"CSV: {args.out_dir / 'key_counts.csv'}")
+            print(f"JSON: {args.out_dir / 'summary.json'}")
     except (FileNotFoundError, ValueError, RuntimeError, OSError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         sys.exit(1)
