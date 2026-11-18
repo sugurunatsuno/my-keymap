@@ -51,3 +51,26 @@ def test_empty_rejected(tmp_path):
     file.write_text(" \n", encoding="utf-8")
     with pytest.raises(ValueError):
         generate_heatmap(file, LAYOUT, tmp_path / "out")
+
+
+def test_l_prefix_small_kana():
+    assert kana_to_romaji("ぁぃゃゅょ", small_kana_style="l")[0] == "lalilyalyulyo"
+    assert kana_to_romaji("っ", small_kana_style="l")[0] == "ltu"
+    assert kana_to_romaji("しゃっこう", small_kana_style="l")[0] == "syakkou"
+    assert kana_to_romaji("ぁぃゃゅょ", small_kana_style="x")[0] == "xaxixyaxyuxyo"
+
+
+def test_ue_swap_candidate():
+    original = load_layout(LAYOUT)
+    candidate = load_layout(Path(__file__).parents[1] / "layouts" / "personal-colemak-derived-65-ue-swap-v2.json")
+    assert original[1][8] == "U" and original[2][8] == "E"
+    assert candidate[1][8] == "E" and candidate[2][8] == "U"
+    assert sorted(k for row in original for k in row) == sorted(k for row in candidate for k in row)
+
+
+def test_report_l_style(tmp_path):
+    source = tmp_path / "small.txt"
+    source.write_text("ぁゅっ", encoding="utf-8")
+    report = generate_heatmap(source, LAYOUT, tmp_path / "out", mode="kana", small_kana_style="l")
+    assert report["small_kana_style"] == "l"
+    assert report["estimated_keypresses"] == len("lalyultu")
