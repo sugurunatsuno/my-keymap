@@ -36,3 +36,31 @@ python -m keylab heatmap corpus.txt --out-dir reports/my-corpus
 - キーの色は頻度を示すもので、押しやすさや運指の移動距離ではありません。
 - サンプルはテスト用の短文で、日本語全体の頻度を代表しません。
 - レポートと `corpus.txt` はGitの追跡対象から外しています。生の文章をGitHubに投稿しないでください。
+
+
+## U/E交換案との比較
+
+以下は同じかな文章、同じLによる小書きかな入力の設定で、配列だけを変えた比較です。
+
+```bash
+python -m keylab heatmap samples/mini_kana.txt --mode kana \
+  --layout layouts/personal-colemak-derived-65.json \
+  --small-kana-style l --out-dir reports/baseline
+
+python -m keylab heatmap samples/mini_kana.txt --mode kana \
+  --layout layouts/personal-colemak-derived-65-ue-swap-v2.json \
+  --small-kana-style l --out-dir reports/ue-swap
+```
+
+それぞれの `heatmap.html` をブラウザで開いて比較します。配列を交換しても打鍵数や英字の出現頻度は同じで、物理的な場所が変わります。ヒートマップだけで運指負担や入力速度の改善が証明されるわけではありません。
+
+## 小書きかな入力の個人設定
+
+ユーザーは小書きかなの入力にLを使うため、CLIのデフォルトは `--small-kana-style l` です。
+比較用に `--small-kana-style x` も選べます。
+
+- 単独の `ぁ` は `la`、`ゅ` は `lyu`、単独の `っ` は `ltu`
+- `しゃ` は従来どおり `sya`、`かった` は `katta` のように、拗音の短縮や促音の子音重ねを維持
+- すべての拗音や促音をLで個別に打つ習慣の場合は、今後さらに綴りの選択ルールを追加して比較する必要があります
+
+これはキーの押下頻度の予測です。実際に打鍵されたLの回数を観測したものではありません。
