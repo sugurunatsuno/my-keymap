@@ -22,6 +22,16 @@
 
 オリジナルの設計基準は保持したまま、Uをホーム段、Eを上段へ交換する[候補配列](layouts/personal-colemak-derived-65-ue-swap-v2.json)を追加しました。小書きかな入力のL方式もヒートマップで選択できます。比較方法は [docs/heatmap.md](docs/heatmap.md) を参照。
 
+## IME語尾拡張を考慮したヒートマップ
+
+通常入力 / 語尾拡張8件 / 語尾拡張35件を、同じ日本語テキストから比較できます。U/E交換後の配列、小書きかなL方式を既定値にしています。
+
+```bash
+python -m keylab heatmap-compare samples/mini_kana.txt
+```
+
+`reports/ime-compare/index.html` を開いて確認してください。自分の文章や、U/E交換前の配列でも比較できます。[比較手順](docs/ime-heatmap-compare.md)を参照。理論上の推定であり、実測した打鍵ログではありません。
+
 ## IME語尾拡張を前提とした配列評価
 
 です/ますなどの短縮入力を実際に打ちやすいと感じているため、[IME拡張込みの評価方針](docs/ime-aware-layout.md)を採用します。今後は通常ローマ字列だけでなく、`ds` や `ms` などの短縮後のキー遷移も解析します。解析器と配列の再最適化はまだ未実装です。
