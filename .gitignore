@@ -12,3 +12,8 @@ data/private/
 *.mp4
 *.avi
 .DS_Store
+
+# Corpus texts and generated reports are local-only
+reports/
+corpus.txt
+corpus_*.txt
