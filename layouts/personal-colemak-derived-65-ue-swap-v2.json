@@ -1,0 +1,121 @@
+{
+  "id": "personal-colemak-derived-65-ue-swap-v2",
+  "name": "Personal Colemak-derived 65%: U/E swap candidate",
+  "status": "experimental candidate for heatmap comparison; not physically applied",
+  "date": "2026-11-18",
+  "source": "v1 user-provided keymap with U and E exchanged after user heatmap observation",
+  "rows": [
+    {
+      "index": 0,
+      "display": "Esc  1  2  3  4  5  6  7  8  9  0  '  =  ⌫     Del",
+      "keys": [
+        "Esc",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "0",
+        "'",
+        "=",
+        "⌫",
+        "Del"
+      ]
+    },
+    {
+      "index": 1,
+      "display": "Tab  Q  W  F  P  B  J  L  E  Y  ;  [  ]  \\  PgUp",
+      "keys": [
+        "Tab",
+        "Q",
+        "W",
+        "F",
+        "P",
+        "B",
+        "J",
+        "L",
+        "E",
+        "Y",
+        ";",
+        "[",
+        "]",
+        "\\",
+        "PgUp"
+      ]
+    },
+    {
+      "index": 2,
+      "display": "`  A  R  S  T  G  M  N  U  I  O  -  Enter  PgDn",
+      "keys": [
+        "`",
+        "A",
+        "R",
+        "S",
+        "T",
+        "G",
+        "M",
+        "N",
+        "U",
+        "I",
+        "O",
+        "-",
+        "Enter",
+        "PgDn"
+      ]
+    },
+    {
+      "index": 3,
+      "display": "Shift Z  X  C  D  V  K  H  ,  .  /  Shift  ↑   Home",
+      "keys": [
+        "Shift",
+        "Z",
+        "X",
+        "C",
+        "D",
+        "V",
+        "K",
+        "H",
+        ",",
+        ".",
+        "/",
+        "Shift",
+        "↑",
+        "Home"
+      ]
+    },
+    {
+      "index": 4,
+      "display": "Ctrl Win Alt    Space    Alt Fn Ctrl  ←   ↓    →",
+      "keys": [
+        "Ctrl",
+        "Win",
+        "Alt",
+        "Space",
+        "Alt",
+        "Fn",
+        "Ctrl",
+        "←",
+        "↓",
+        "→"
+      ]
+    }
+  ],
+  "unresolved": [
+    "precise physical key geometry",
+    "US versus JIS physical variant",
+    "layer activation",
+    "abbreviation rules",
+    "keycap labels and OS mapping"
+  ],
+  "derived_from": "personal-colemak-derived-65-v1",
+  "change_summary": "U/E swapped vertically in same right-hand column; no other key positions modified",
+  "notes": [
+    "U is on the home row, E is on the upper row",
+    "Compare with v1 using the same corpus and IME settings before interpreting a frequency heatmap as ergonomics",
+    "Small kana are entered with l-prefix per personal preference, separately parameterized in the heatmap tool"
+  ]
+}
