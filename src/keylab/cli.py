@@ -40,6 +40,14 @@ def build_parser():
     heatmap.add_argument("--n-style", choices=("double", "contextual"), default="double")
     heatmap.add_argument("--small-kana-style", choices=("l", "x"), default="l",
                          help="Prefix for isolated small kana (default: l)")
+    comparison = sub.add_parser("heatmap-compare", help="Compare normal, trial8 and all35 suffix IME heatmaps")
+    comparison.add_argument("input_file", type=Path, help="UTF-8 Japanese input text")
+    comparison.add_argument("--layout", type=Path,
+                            default=Path("layouts/personal-colemak-derived-65-ue-swap-v2.json"))
+    comparison.add_argument("--lexicon", type=Path, default=Path("lexicons/effiveroman-suffixes.tsv"))
+    comparison.add_argument("--out-dir", type=Path, default=Path("reports/ime-compare"))
+    comparison.add_argument("--n-style", choices=("double", "contextual"), default="double")
+    comparison.add_argument("--small-kana-style", choices=("l", "x"), default="l")
     return parser
 
 
@@ -90,6 +98,16 @@ def main(argv=None):
             print(f"HTML: {args.out_dir / 'heatmap.html'}")
             print(f"CSV: {args.out_dir / 'key_counts.csv'}")
             print(f"JSON: {args.out_dir / 'summary.json'}")
+        elif args.command == "heatmap-compare":
+            from .ime_heatmap import compare_ime_heatmaps
+            report = compare_ime_heatmaps(
+                args.input_file, args.layout, args.lexicon, args.out_dir,
+                args.n_style, args.small_kana_style)
+            for mode in ("none", "trial", "all"):
+                row = report["scenarios"][mode]
+                print(f"{mode}: {row['estimated_keypresses']} keys"
+                      f" (saved: {row['saved_vs_none']})")
+            print(f"Open: {args.out_dir / 'index.html'}")
     except (FileNotFoundError, ValueError, RuntimeError, OSError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         sys.exit(1)
