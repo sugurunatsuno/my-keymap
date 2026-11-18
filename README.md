@@ -22,6 +22,14 @@
 
 オリジナルの設計基準は保持したまま、Uをホーム段、Eを上段へ交換する[候補配列](layouts/personal-colemak-derived-65-ue-swap-v2.json)を追加しました。小書きかな入力のL方式もヒートマップで選択できます。比較方法は [docs/heatmap.md](docs/heatmap.md) を参照。
 
+## Google日本語入力への語尾拡張のインポート
+
+[35件の完全版](ime/google-japanese-input-effive-suffixes-35.txt)と[初期試用8件版](ime/google-japanese-input-effive-suffixes-trial-8.txt)を作成しました。いずれもローマ字テーブルのインポート用ファイルで、単語登録辞書ではありません。
+
+インポートすると現在のローマ字テーブルが上書きされます。先に必ず現在の設定をエクスポートして保存してください。独自設定がある場合は[統合ツール](tools/merge_google_ime_table.py)を使い、元の規則と語尾拡張を合わせたファイルを生成してください。
+
+詳しくは[インポート手順](docs/google-ime-import.md)を参照。IME上での実動作は未検証です。
+
 ## EffiveRoman語尾拡張の単語帳
 
 EffiveRomanの語尾拡張35件を[単語帳TSV](lexicons/effiveroman-suffixes.tsv)と[解説](docs/effiveroman-suffixes.md)に保存しました。最初の試用候補は8件ですが、現時点では実験前です。TSVは候補管理用であり、Google日本語入力へ直接インポートするものではありません。
