@@ -1,0 +1,36 @@
+入力	かな	系列	通常ローマ字	通常打鍵数	2打鍵との差	扱い	注記
+dg	でしたら	です系	desitara	8	6	候補	原典の他の拡張規則との競合に注意
+dt	でして	です系	desite	6	4	候補	
+dn	でした	です系	desita	6	4	初期試用	
+ds	です	です系	desu	4	2	初期試用	原典の他の拡張規則との競合に注意
+dk	でしょう	です系	desyou	6	4	候補	
+mg	ましたら	ます系	masitara	8	6	候補	
+mt	まして	ます系	masite	6	4	候補	
+mn	ました	ます系	masita	6	4	初期試用	
+ms	ます	ます系	masu	4	2	初期試用	
+mk	ましょう	ます系	masyou	6	4	候補	
+hg	すれば	する系	sureba	6	4	候補	
+ht	して	する系	site	4	2	初期試用	
+hn	した	する系	sita	4	2	初期試用	
+hs	する	する系	suru	4	2	初期試用	
+hk	しよう	する系	siyou	5	3	候補	
+rg	あれば	ある系	areba	5	3	候補	
+rt	あり	ある系	ari	3	1	候補	
+rn	あった	ある系	atta	4	2	候補	
+rs	ある	ある系	aru	3	1	候補	
+rk	あろう	ある系	arou	4	2	候補	
+pg	でございましたら	ございます系	degozaimasitara	15	13	候補	
+pt	でございまして	ございます系	degozaimasite	13	11	候補	
+pn	でございました	ございます系	degozaimasita	13	11	候補	
+ps	でございます	ございます系	degozaimasu	11	9	候補	
+pk	でございましょう	ございます系	degozaimasyou	13	11	候補	
+bg	ませんでしたら	ません系	masenndesitara	14	12	候補	
+bt	ませんでして	ません系	masenndesite	12	10	候補	
+bn	ませんでした	ません系	masenndesita	12	10	候補	
+bs	ません	ません系	masenn	6	4	初期試用	
+bk	ませんでしょう	ません系	masenndesyou	12	10	候補	
+wg	なれば	なる系	nareba	6	4	候補	
+wt	なり	なる系	nari	4	2	候補	
+wn	なった	なる系	natta	5	3	候補	
+ws	なる	なる系	naru	4	2	候補	
+wk	なろう	なる系	narou	5	3	候補	
