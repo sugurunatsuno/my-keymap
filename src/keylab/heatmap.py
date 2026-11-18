@@ -87,7 +87,7 @@ def add_kanji_readings(text: str) -> str:
     )
 
 
-def kana_to_romaji(text: str, n_style: str = "double") -> tuple[str, Counter[str]]:
+def kana_to_romaji(text: str, n_style: str = "double", small_kana_style: str = "x") -> tuple[str, Counter[str]]:
     """Convert kana and literal ASCII keys to keyboard-like keystrokes.
 
     Returns (keystrokes, unconverted_character_counts). `nn` always unambiguous
@@ -95,6 +95,8 @@ def kana_to_romaji(text: str, n_style: str = "double") -> tuple[str, Counter[str
     """
     if n_style not in {"double", "contextual"}:
         raise ValueError("n_style must be 'double' or 'contextual'")
+    if small_kana_style not in {"x", "l"}:
+        raise ValueError("small_kana_style must be x or l")
     s = to_hiragana(text)
     out: list[str] = []
     skipped: Counter[str] = Counter()
@@ -121,7 +123,7 @@ def kana_to_romaji(text: str, n_style: str = "double") -> tuple[str, Counter[str
             if next_romaji and next_romaji[0] not in "aeiouxy":
                 out.append(next_romaji[0])
             else:
-                out.append("xtu")
+                out.append(small_kana_style + "tu")
         elif char == "ー":
             vowel = next((c for c in reversed("".join(out)) if c in "aeiou"), None)
             if vowel is None:
@@ -132,7 +134,10 @@ def kana_to_romaji(text: str, n_style: str = "double") -> tuple[str, Counter[str
             out.append(DIGRAPHS[s[i : i + 2]])
             i += 1
         elif char in KANA:
-            out.append(KANA[char])
+            spelling = KANA[char]
+            if char in "ぁぃぅぇぉゃゅょゎゕゖ":
+                spelling = small_kana_style + spelling[1:]
+            out.append(spelling)
         elif char in PUNCTUATION:
             out.append(PUNCTUATION[char])
         elif "A" <= char <= "Z" or "a" <= char <= "z" or "0" <= char <= "9":
@@ -147,7 +152,8 @@ def kana_to_romaji(text: str, n_style: str = "double") -> tuple[str, Counter[str
     return "".join(out), skipped
 
 
-def get_keystrokes(text: str, mode: str = "auto", n_style: str = "double") -> tuple[str, Counter[str]]:
+def get_keystrokes(text: str, mode: str = "auto", n_style: str = "double",
+                   small_kana_style: str = "x") -> tuple[str, Counter[str]]:
     """Interpret text as kana/kanji (auto), kana only, or literal roman keystrokes."""
     if mode == "romaji":
         # Keep literal typed symbol events; ignore whitespace and non-key text.
@@ -159,7 +165,8 @@ def get_keystrokes(text: str, mode: str = "auto", n_style: str = "double") -> tu
         raise ValueError("--mode kana に漢字が含まれています。--mode auto を選択してください。")
     if mode not in {"auto", "kana"}:
         raise ValueError(f"Unknown input mode: {mode}")
-    return kana_to_romaji(add_kanji_readings(text) if mode == "auto" else text, n_style=n_style)
+    return kana_to_romaji(add_kanji_readings(text) if mode == "auto" else text,
+                         n_style=n_style, small_kana_style=small_kana_style)
 
 
 def load_layout(path: Path) -> list[list[str]]:
@@ -209,7 +216,8 @@ def _key_width(key: str) -> int:
             "Del": 2, "Esc": 2, "⌫": 2}.get(key, 1)
 
 
-def render_html(layout: list[list[str]], stats: dict, source_name: str, mode: str, n_style: str) -> str:
+def render_html(layout: list[list[str]], stats: dict, source_name: str, mode: str, n_style: str,
+                small_kana_style: str = "x") -> str:
     maximum = max(stats["counts"].values(), default=0)
     total = stats["count"]
     key_rows = []
@@ -251,7 +259,7 @@ th,td{{padding:7px 10px;text-align:left;border-bottom:1px solid #edf0f3}}th{{bac
 @media(max-width:680px){{body{{padding:12px}}.panel{{padding:14px}}.key-row{{min-width:750px}}}}
 </style></head><body>
 <header><h1>Keyboard Layout Lab / キー使用頻度</h1>
-<p>入力: <code>{html.escape(source_name)}</code> ｜ モード: {html.escape(mode)} ｜ ん: {html.escape(n_style)}</p>
+<p>入力: <code>{html.escape(source_name)}</code> ｜ モード: {html.escape(mode)} ｜ ん: {html.escape(n_style)} ｜ 独立した小書きかな: {html.escape(small_kana_style.upper())}</p>
 <div class="summary"><div class="stat">推定打鍵数<strong>{total:,}</strong></div>
 <div class="stat">配置内の打鍵<strong>{stats['placed_total']:,}</strong></div>
 <div class="stat">中央の文字キー ({html.escape(center_keys)})<strong>{stats['center_total']:,} / {pct:.1f}%</strong></div></div></header>
@@ -265,19 +273,20 @@ th,td{{padding:7px 10px;text-align:left;border-bottom:1px solid #edf0f3}}th{{bac
 
 
 def generate_heatmap(input_path: Path, layout_path: Path, out_dir: Path,
-                     mode: str = "auto", n_style: str = "double") -> dict:
+                     mode: str = "auto", n_style: str = "double",
+                     small_kana_style: str = "x") -> dict:
     input_path = Path(input_path)
     layout_path = Path(layout_path)
     out_dir = Path(out_dir)
     source = input_path.read_text(encoding="utf-8-sig")
     layout = load_layout(layout_path)
-    keystrokes, skipped = get_keystrokes(source, mode, n_style)
+    keystrokes, skipped = get_keystrokes(source, mode, n_style, small_kana_style)
     if not keystrokes:
         raise ValueError("入力からローマ字キーを生成できません。文字の種類と --mode を確認してください。")
     stats = calculate(keystrokes, layout)
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "heatmap.html").write_text(
-        render_html(layout, stats, input_path.name, mode, n_style), encoding="utf-8"
+        render_html(layout, stats, input_path.name, mode, n_style, small_kana_style), encoding="utf-8"
     )
     with (out_dir / "key_counts.csv").open("w", encoding="utf-8-sig", newline="") as output:
         writer = csv.writer(output)
@@ -286,14 +295,16 @@ def generate_heatmap(input_path: Path, layout_path: Path, out_dir: Path,
             writer.writerow([key, count, round(100 * count / stats["count"], 3)])
     summary = {
         "input_file": input_path.name, "layout_file": layout_path.name,
-        "input_mode": mode, "n_style": n_style, "typing_model": "estimate; not observed typing",
+        "input_mode": mode, "n_style": n_style, "small_kana_style": small_kana_style,
+        "typing_model": "estimate; not observed typing",
         "estimated_keypresses": stats["count"], "placed_keypresses": stats["placed_total"],
         "center_keys": stats["center_keys"], "center_keypresses": stats["center_total"],
         "unplaced_keypresses": stats["unplaced"],
         "unconverted_characters": dict(skipped),
         "warnings": [
             "No typing observations were collected.",
-            "IME conversion, candidates, edits, shift, layers, abbreviations and user-specific spelling not modeled.",
+            "IME conversion, candidates, edits, shift, layers, abbreviations and most individual spelling choices not modeled.",
+            "Small-kana prefix applies to isolated small kana; contracted yoon spellings (e.g. sya) and consonant doubling for sokuon are retained.",
             "Input kanji readings may be incorrect; supplied corpus and conventions affect every result.",
         ],
     }
