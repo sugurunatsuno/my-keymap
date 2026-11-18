@@ -12,6 +12,7 @@ dependencies = []
 
 [project.optional-dependencies]
 camera = ["opencv-python>=4.8,<5", "mediapipe>=0.10,<1", "numpy>=1.24"]
+japanese = ["pykakasi>=2.3,<3"]
 dev = ["pytest>=7,<10"]
 
 [tool.setuptools.packages.find]
