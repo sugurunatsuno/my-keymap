@@ -18,6 +18,19 @@
 
 日本語ローマ字入力を対象に、まず文字配置を固定した省略入力を検討します。その後、押しにくい中央キーの活用やレイヤーへの移動を評価します。現時点でOS/ファームウェアへの適用設定はありません。
 
+## 日本語入力ヒートマップ
+
+65% Colemak派生配列のキー使用頻度を日本語テキストから推定し、ブラウザで表示できます。カメラは不要です。
+
+```bash
+python -m pip install -e .
+python -m keylab heatmap samples/mini_kana.txt
+```
+
+生成された `reports/heatmap/heatmap.html` をブラウザで開きます。自分のUTF-8の文章を使う場合は `python -m keylab heatmap corpus.txt` です。漢字を含むときは、先に `python -m pip install -e '.[japanese]'` を実行してください。
+
+詳しくは [docs/heatmap.md](docs/heatmap.md) を参照。推定打鍵であり、実際の指の動きやキーイベントの記録ではありません。
+
 ## 最初に動かす
 
 Python 3.10 以降を推奨。カメラが使える PC で実行します。
